@@ -1,1 +1,0 @@
-<?php require __DIR__ . '/common.php'; require_login(); $cid=(int)($_POST['chat_id']??0); $users=load_users(); if(isset($users[(string)$cid])){$users[(string)$cid]['blocked']=false; save_users($users);} header('Location: users.php');

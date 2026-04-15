@@ -1,1 +1,0 @@
-<?php require __DIR__ . '/common.php'; require_login(); $id=trim($_POST['id']??''); $jobs=load_jobs(); if(isset($jobs[$id])){$jobs[$id]['status']='canceled'; save_jobs($jobs);} header('Location: index.php');
