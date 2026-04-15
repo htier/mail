@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /data/
+Disallow: /uploads/
+Disallow: /api/
+
+Sitemap: https://temail.pro/sitemap.xml

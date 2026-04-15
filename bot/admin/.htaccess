@@ -1,0 +1,15 @@
+Options -Indexes
+
+# Включить базовую авторизацию (cPanel обычно сам прописывает путь)
+AuthType Basic
+AuthName "TeMail Admin"
+AuthUserFile /home/u801455322/.htpasswds/temail_admin/passwd
+Require valid-user
+
+# DO NOT REMOVE THIS LINE AND THE LINES BELOW PWPROTECTID:YbxbauCYxq
+AuthType Basic
+AuthName "Restricted Access"
+AuthUserFile /home/u801455322/domains/temail.pro/public_html/bot/admin/.htpasswd
+Require valid-user
+# DO NOT REMOVE THIS LINE AND THE LINES ABOVE YbxbauCYxq:PWPROTECTID
+
