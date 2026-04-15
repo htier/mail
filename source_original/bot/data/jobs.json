@@ -1,0 +1,102 @@
+{
+    "9d7f53683635": {
+        "id": "9d7f53683635",
+        "text": "Да",
+        "created_by": 1474039422,
+        "status": "canceled",
+        "created_at": 1766010942,
+        "sent": 0,
+        "failed": 0,
+        "cursor": 0
+    },
+    "94dd46123fcb": {
+        "id": "94dd46123fcb",
+        "text": "привет",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766011410,
+        "sent": 1,
+        "failed": 0,
+        "cursor": 1
+    },
+    "327d126e5178": {
+        "id": "327d126e5178",
+        "text": "дам дам дааааааааааадддддддаааааааамммммм",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766011652,
+        "sent": 1,
+        "failed": 0,
+        "cursor": 1
+    },
+    "a12bdb441010": {
+        "id": "a12bdb441010",
+        "text": "ghj",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766090934,
+        "sent": 2,
+        "failed": 0,
+        "cursor": 2
+    },
+    "f2ceea93db96": {
+        "id": "f2ceea93db96",
+        "text": "прв",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766092537,
+        "sent": 2,
+        "failed": 0,
+        "cursor": 2
+    },
+    "554424fddb1d": {
+        "id": "554424fddb1d",
+        "text": "Hllo!\r\nMessage to subscribed users.\r\n👇👇👇\r\n@smtlinkbot",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766352706,
+        "sent": 11,
+        "failed": 2,
+        "cursor": 13
+    },
+    "82f812684111": {
+        "id": "82f812684111",
+        "text": "Shows basic information about a Telegram user: ID, username, name, language, account type and chat type. https:\/\/t.me\/Lookup_idBot",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766722908,
+        "sent": 20,
+        "failed": 5,
+        "cursor": 24
+    },
+    "2fa150cb59f5": {
+        "id": "2fa150cb59f5",
+        "text": "Shows basic information about a Telegram user: ID, username, name, language, account type and chat type. https:\/\/t.me\/Lookup_idBot",
+        "created_by": 1474039422,
+        "status": "done",
+        "created_at": 1766803267,
+        "sent": 23,
+        "failed": 2,
+        "cursor": 25
+    },
+    "c96b3e679bd9": {
+        "id": "c96b3e679bd9",
+        "text": "Shows basic information about a Telegram user: ID, username, name, language, account type and chat type. https:\/\/t.me\/Lookup_idBot",
+        "created_by": 1474039422,
+        "status": "canceled",
+        "created_at": 1769952103,
+        "sent": 0,
+        "failed": 0,
+        "cursor": 0
+    },
+    "4866cd07ab1d": {
+        "id": "4866cd07ab1d",
+        "text": "Shows basic information about a Telegram user: ID, username, name, language, account type and chat type. https:\/\/t.me\/Lookup_idBot",
+        "created_by": 1474039422,
+        "status": "queued",
+        "created_at": 1769952233,
+        "sent": 0,
+        "failed": 0,
+        "cursor": 0
+    }
+}

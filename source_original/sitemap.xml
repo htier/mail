@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://temail.pro/</loc>
+    <lastmod>2025-12-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://temail.pro/blog.php</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://temail.pro/privacy.php</loc>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://temail.pro/terms.php</loc>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://temail.pro/contact.php</loc>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

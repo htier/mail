@@ -1,0 +1,11 @@
+Options -Indexes
+RewriteEngine On
+
+# webhook должен работать
+RewriteRule ^telegram\.php$ - [L]
+
+# админка должна открываться
+RewriteRule ^admin/ - [L]
+
+# всё остальное в /bot -> 404
+RewriteRule ^.*$ /404.php [L]
