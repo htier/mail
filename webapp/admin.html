@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#17212b"/>
+  <title>TeMail — Admin Panel</title>
+  <link rel="stylesheet" href="css/tma.css"/>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Loading screen ──────────────────── -->
+  <div id="screenLoading" style="text-align:center; padding:80px 20px">
+    <div class="spinner"></div>
+    <p style="margin-top:16px; color:var(--hint); font-size:14px">Verifying access…</p>
+  </div>
+
+  <!-- ── Access denied ───────────────────── -->
+  <div id="screenDenied" class="access-denied" style="display:none">
+    <div class="ico">🔒</div>
+    <h2>Access Denied</h2>
+    <p>This panel is only available<br/>to administrators.</p>
+  </div>
+
+  <!-- ── Admin content ───────────────────── -->
+  <div id="screenAdmin" style="display:none">
+
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="header-logo">
+        <div class="ico">✉</div>
+        <span>Admin Panel</span>
+      </div>
+      <span class="admin-badge">ADMIN</span>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statUsers">—</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statToday">—</div>
+        <div class="stat-label">Active Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statGm">—</div>
+        <div class="stat-label">Guerrilla</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statMt">—</div>
+        <div class="stat-label">Mail.tm</div>
+      </div>
+    </div>
+
+    <!-- Broadcast -->
+    <div class="section-block">
+      <div class="section-title">📢 Broadcast Message</div>
+      <div class="broadcast-form">
+        <textarea
+          class="textarea"
+          id="broadcastText"
+          placeholder="Write a message to send to all users…"
+        ></textarea>
+        <button class="btn-full" id="btnBroadcast">Send to All Users</button>
+      </div>
+    </div>
+
+    <!-- Recent users -->
+    <div class="section-block" style="margin-bottom:20px">
+      <div class="section-title">👥 Recent Users</div>
+      <div id="userList">
+        <div style="padding:24px; text-align:center">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- #screenAdmin -->
+
+</div><!-- #app -->
+
+<div class="toast" id="toast"></div>
+<script src="js/admin.js"></script>
+</body>
+</html>

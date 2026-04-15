@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#17212b"/>
+  <title>TeMail — Temp Email</title>
+  <link rel="stylesheet" href="css/tma.css"/>
+  <!-- Telegram Mini App SDK (must be first script) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header ──────────────────────────── -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="ico">✉</div>
+      <span>TeMail</span>
+    </div>
+    <div class="header-user" id="headerUser"></div>
+  </header>
+
+  <!-- ── Provider selector ───────────────── -->
+  <div class="provider-tabs">
+    <button class="provider-tab active" data-p="guerrilla">⚡ Guerrilla</button>
+    <button class="provider-tab"        data-p="mailtm">✨ Mail.tm</button>
+  </div>
+
+  <!-- ── Email card ──────────────────────── -->
+  <div class="email-card">
+    <div class="email-label">Your temporary email</div>
+    <div class="email-address" id="emailAddress">
+      <span class="email-placeholder">Tap "Generate" to create an address</span>
+    </div>
+    <div class="email-meta">
+      <div class="email-timer" id="emailTimer" style="display:none">
+        <span class="timer-dot"></span>
+        <span id="timerText">Active</span>
+      </div>
+    </div>
+    <div class="email-actions" id="emailActions" style="display:none">
+      <button class="action-btn primary" id="btnCopy">📋 Copy</button>
+      <button class="action-btn"         id="btnNew">🔄 New</button>
+    </div>
+  </div>
+
+  <!-- ── Generate (shown before first email) -->
+  <div class="generate-section" id="generateSection">
+    <button class="btn-generate" id="btnGenerate">✨ Generate Email</button>
+  </div>
+
+  <!-- ── Inbox ────────────────────────────── -->
+  <div class="inbox-section" id="inboxSection" style="display:none">
+    <div class="inbox-header">
+      <span>📥 Inbox</span>
+      <span class="count-badge" id="countBadge">0</span>
+      <span class="spacer"></span>
+      <button class="refresh-btn" id="btnRefresh" title="Refresh">↻</button>
+    </div>
+    <div id="inboxList">
+      <div class="inbox-empty">
+        <div class="inbox-empty-ico">✉️</div>
+        <div class="inbox-empty-title">Inbox is empty</div>
+        <div class="inbox-empty-sub">Emails appear here automatically</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<!-- ── Email viewer sheet ────────────────── -->
+<div class="viewer-overlay" id="viewerOverlay">
+  <div class="viewer-panel" id="viewerPanel">
+    <div class="viewer-drag"></div>
+    <div id="viewerContent"></div>
+  </div>
+</div>
+
+<!-- ── Toast notification ────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script src="js/tma.js"></script>
+</body>
+</html>
