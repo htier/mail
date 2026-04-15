@@ -85,18 +85,98 @@ function create_job(&$jobs, $text, $admin_id){
 
 // ===== Keyboards =====
 function user_keyboard($lang){
-  $open = ($lang==='ru') ? "🌐 Открыть Web App" : "🌐 Open Web App";
+  $open    = ($lang==='ru') ? "🌐 Открыть Web App" : "🌐 Open Web App";
   $langBtn = ($lang==='ru') ? "🌐 Язык (EN/RU)" : "🌐 Language (EN/RU)";
   $support = ($lang==='ru') ? "🆘 Поддержка" : "🆘 Support";
-  $supportus = ($lang==='ru') ? "☕️ Поддержать нас" : "☕️ Support us";
+  $premium = "⭐ Premium";
   return json_encode([
     'keyboard'=>[
       [ ['text'=>$open] ],
-      [ ['text'=>$supportus] ],
+      [ ['text'=>$premium] ],
       [ ['text'=>$support], ['text'=>$langBtn] ],
     ],
     'resize_keyboard'=>true
   ], JSON_UNESCAPED_UNICODE);
+}
+
+/* ===== Premium helpers ===== */
+function generate_premium_code(): string {
+  $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no ambiguous 0/O/1/I
+  $code = '';
+  for ($i = 0; $i < 16; $i++) {
+    if ($i > 0 && $i % 4 === 0) $code .= '-';
+    $code .= $chars[random_int(0, strlen($chars) - 1)];
+  }
+  return $code; // XXXX-XXXX-XXXX-XXXX
+}
+
+function send_premium_invoice(int $chat_id, string $lang): void {
+  $title = "⭐ TeMail Premium";
+  $desc = ($lang === 'ru')
+    ? "1 месяц без рекламы на temail.pro и в Mini App. Получите уникальный код активации."
+    : "1 month ad-free on temail.pro and Mini App. You'll receive a unique activation code.";
+  tm_api('sendInvoice', [
+    'chat_id'       => $chat_id,
+    'title'         => $title,
+    'description'   => $desc,
+    'payload'       => 'premium_1month_' . $chat_id,
+    'provider_token'=> '',   // empty = Telegram Stars
+    'currency'      => 'XTR',
+    'prices'        => json_encode([['label'=>'1 Month Premium','amount'=>200]]),
+  ]);
+}
+
+function handle_stars_payment(array &$users, int $chat_id, int $user_id, string $lang): void {
+  $codesPath = __DIR__ . '/data/premium_codes.json';
+  $codes = tm_json_load($codesPath);
+
+  $userKey = '_user_' . $user_id;
+  $existingCode = $codes[$userKey] ?? null;
+  $isRenewal = false;
+
+  if ($existingCode && isset($codes[$existingCode]) && ($codes[$existingCode]['expires_at'] ?? 0) > time()) {
+    // RENEWAL: extend existing code by 30 days
+    $codes[$existingCode]['expires_at'] += 30 * 86400;
+    $codes[$existingCode]['months'] = ($codes[$existingCode]['months'] ?? 1) + 1;
+    $codes[$existingCode]['redeemed'] = false; // allow re-activation on site
+    $code = $existingCode;
+    $isRenewal = true;
+  } else {
+    // NEW: generate fresh code
+    $code = generate_premium_code();
+    while (isset($codes[$code])) { $code = generate_premium_code(); } // ensure unique
+    $codes[$code] = [
+      'user_id'     => $user_id,
+      'created_at'  => time(),
+      'expires_at'  => time() + 30 * 86400,
+      'months'      => 1,
+      'redeemed'    => false,
+      'redeemed_at' => null,
+    ];
+    $codes[$userKey] = $code; // user → code lookup
+    $isRenewal = false;
+  }
+
+  tm_json_save($codesPath, $codes);
+  $expDate = date('Y-m-d', $codes[$code]['expires_at']);
+
+  if ($lang === 'ru') {
+    $msg = $isRenewal
+      ? "⭐ <b>Premium продлён!</b>\n\nВаш код активации:\n<code>$code</code>\n\n📅 Действует до: <b>$expDate</b>\n\nВведите код на <a href=\"https://temail.pro\">temail.pro</a> или в Mini App, чтобы скрыть рекламу."
+      : "⭐ <b>Premium активирован!</b>\n\nВаш код активации:\n<code>$code</code>\n\n📅 Действует до: <b>$expDate</b>\n\nВведите код на <a href=\"https://temail.pro\">temail.pro</a> или в Mini App, чтобы скрыть рекламу.";
+  } else {
+    $msg = $isRenewal
+      ? "⭐ <b>Premium renewed!</b>\n\nYour activation code:\n<code>$code</code>\n\n📅 Valid until: <b>$expDate</b>\n\nEnter this code on <a href=\"https://temail.pro\">temail.pro</a> or in the Mini App to hide all ads."
+      : "⭐ <b>Premium activated!</b>\n\nYour activation code:\n<code>$code</code>\n\n📅 Valid until: <b>$expDate</b>\n\nEnter this code on <a href=\"https://temail.pro\">temail.pro</a> or in the Mini App to hide all ads.";
+  }
+
+  tm_api('sendMessage', [
+    'chat_id'    => $chat_id,
+    'text'       => $msg,
+    'parse_mode' => 'HTML',
+    'disable_web_page_preview' => true,
+    'reply_markup' => user_keyboard($lang),
+  ]);
 }
 
 function support_keyboard($lang){
@@ -208,6 +288,16 @@ function send_weblogin($admin_id, $chat_id, $lang, $i18n){
   reply_msg($chat_id, sprintf($t['admin_link'], $minutes, $url), ['reply_markup'=>admin_reply_keyboard($lang)]);
 }
 
+// ===== pre_checkout_query (Stars payment confirmation) =====
+if(isset($update['pre_checkout_query'])){
+  $pcq = $update['pre_checkout_query'];
+  tm_api('answerPreCheckoutQuery',[
+    'pre_checkout_query_id'=>$pcq['id'],
+    'ok'=>true
+  ]);
+  http_response_code(200); echo "OK"; exit;
+}
+
 // ===== Callbacks =====
 if(isset($update['callback_query'])){
   $cq=$update['callback_query'];
@@ -287,6 +377,13 @@ $text=trim($msg['text']??'');
 upsert_user($users,$chat_id,$from);
 $lang=tm_get_user_lang($users,$chat_id);
 $isAdmin=tm_is_admin($user_id,$ADMINS);
+
+// ===== successful_payment (Stars — premium) =====
+if(isset($msg['successful_payment'])){
+  tm_json_save($usersPath,$users);
+  handle_stars_payment($users,(int)$chat_id,(int)$user_id,$lang);
+  http_response_code(200); echo "OK"; exit;
+}
 
 // ignore blocked users
 if(!empty($users[(string)$chat_id]['blocked'])){
@@ -379,6 +476,11 @@ if(($text === "☕️ Support us") || ($text === "☕️ Поддержать н
 
 if(($text === "🌐 Language (EN/RU)") || ($text === "🌐 Язык (EN/RU)")){
   lang_picker($chat_id, $lang, $i18n);
+  exit;
+}
+
+if($text === "⭐ Premium"){
+  send_premium_invoice($chat_id, $lang);
   exit;
 }
 
@@ -481,6 +583,7 @@ if($text==='/help'){
 }
 
 if($text==='/lang'){ lang_picker($chat_id,$lang,$i18n); exit; }
+if($text==='/premium' || str_starts_with($text,'/start premium')){ send_premium_invoice($chat_id,$lang); exit; }
 
 if($isAdmin && $text==='/stats'){ reply_msg($chat_id, stats_text($users,$lang), ['reply_markup'=>admin_reply_keyboard($lang)]); exit; }
 if($isAdmin && $text==='/last'){ reply_msg($chat_id, last_text($users,$lang), ['reply_markup'=>admin_reply_keyboard($lang)]); exit; }

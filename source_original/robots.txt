@@ -1,9 +1,17 @@
 User-agent: *
 Allow: /
 
+# Block admin, data, and internal API endpoints
 Disallow: /admin/
+Disallow: /bot/admin/
+Disallow: /bot/data/
 Disallow: /data/
 Disallow: /uploads/
-Disallow: /api/
+Disallow: /api/premium.php
+Disallow: /api/tg_auth.php
+
+# Allow public API
+Allow: /api/guerrilla.php
+Allow: /api/blog.php
 
 Sitemap: https://temail.pro/sitemap.xml

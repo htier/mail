@@ -1,37 +1,39 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <meta name="theme-color" content="#17212b"/>
-  <title>TeMail — Temp Email</title>
-  <link rel="stylesheet" href="css/tma.css"/>
-  <!-- Telegram Mini App SDK (must be first script) -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#07091c"/>
+<title>TeMail — Temp Email</title>
+<link rel="stylesheet" href="css/tma.css"/>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 <div id="app">
 
-  <!-- ── Header ──────────────────────────── -->
+  <!-- Header -->
   <header class="header">
     <div class="header-logo">
       <div class="ico">✉</div>
       <span>TeMail</span>
     </div>
-    <div class="header-user" id="headerUser"></div>
+    <div class="header-right">
+      <button class="lang-btn" id="langBtn" title="Switch language">EN</button>
+      <div class="header-user" id="headerUser"></div>
+    </div>
   </header>
 
-  <!-- ── Provider selector ───────────────── -->
+  <!-- Provider tabs -->
   <div class="provider-tabs">
-    <button class="provider-tab active" data-p="guerrilla">⚡ Guerrilla</button>
-    <button class="provider-tab"        data-p="mailtm">✨ Mail.tm</button>
+    <button class="provider-tab active" data-p="mailtm">✨ Mail.tm</button>
+    <button class="provider-tab" data-p="guerrilla">⚡ Guerrilla</button>
   </div>
 
-  <!-- ── Email card ──────────────────────── -->
-  <div class="email-card">
-    <div class="email-label">Your temporary email</div>
+  <!-- Email card -->
+  <div class="email-card" id="emailCard">
+    <div class="email-label" id="emailLabel">Your temporary email</div>
     <div class="email-address" id="emailAddress">
-      <span class="email-placeholder">Tap "Generate" to create an address</span>
+      <span class="email-placeholder" id="emailPlaceholder">Generating your email…</span>
     </div>
     <div class="email-meta">
       <div class="email-timer" id="emailTimer" style="display:none">
@@ -40,36 +42,61 @@
       </div>
     </div>
     <div class="email-actions" id="emailActions" style="display:none">
-      <button class="action-btn primary" id="btnCopy">📋 Copy</button>
-      <button class="action-btn"         id="btnNew">🔄 New</button>
+      <button class="action-btn primary" id="btnCopy">📋 <span data-i="copy">Copy</span></button>
+      <button class="action-btn" id="btnNew">🔄 <span data-i="new_email">New</span></button>
+      <button class="action-btn danger" id="btnDelete">🗑</button>
     </div>
   </div>
 
-  <!-- ── Generate (shown before first email) -->
-  <div class="generate-section" id="generateSection">
-    <button class="btn-generate" id="btnGenerate">✨ Generate Email</button>
+  <!-- Premium banner (shown when not premium) -->
+  <div class="premium-banner" id="premiumBanner">
+    <div class="premium-banner-text">
+      <span>⭐</span>
+      <div>
+        <strong data-i="premium_title">Premium — No Ads</strong>
+        <small data-i="premium_sub_short">200 Stars/month in the bot</small>
+      </div>
+    </div>
+    <div class="premium-banner-actions">
+      <input class="premium-input" id="premiumCodeInput" type="text"
+        data-i-ph="enter_code" placeholder="XXXX-XXXX-XXXX-XXXX"
+        maxlength="24" autocomplete="off" spellcheck="false"/>
+      <button class="action-btn gold" id="btnActivatePremium" data-i="activate">Activate</button>
+    </div>
   </div>
 
-  <!-- ── Inbox ────────────────────────────── -->
+  <!-- Premium active badge -->
+  <div class="premium-active" id="premiumActive" style="display:none">
+    <span class="prem-dot"></span>
+    <span data-i="premium_active">Premium Active</span>
+    <span id="premiumExpiry" style="opacity:.7;font-size:12px"></span>
+  </div>
+
+  <!-- Inbox -->
   <div class="inbox-section" id="inboxSection" style="display:none">
     <div class="inbox-header">
-      <span>📥 Inbox</span>
+      <span>📥 <span data-i="inbox">Inbox</span></span>
       <span class="count-badge" id="countBadge">0</span>
       <span class="spacer"></span>
       <button class="refresh-btn" id="btnRefresh" title="Refresh">↻</button>
     </div>
     <div id="inboxList">
-      <div class="inbox-empty">
+      <div class="inbox-empty" id="inboxEmpty">
         <div class="inbox-empty-ico">✉️</div>
-        <div class="inbox-empty-title">Inbox is empty</div>
-        <div class="inbox-empty-sub">Emails appear here automatically</div>
+        <div class="inbox-empty-title" data-i="no_emails">No emails yet</div>
+        <div class="inbox-empty-sub" data-i="no_emails_sub">Emails appear here automatically</div>
       </div>
     </div>
   </div>
 
+  <!-- Ad slot (hidden for premium users) -->
+  <div class="adslot" id="adSlot">
+    <!-- Ad network code here -->
+  </div>
+
 </div><!-- #app -->
 
-<!-- ── Email viewer sheet ────────────────── -->
+<!-- Email viewer overlay -->
 <div class="viewer-overlay" id="viewerOverlay">
   <div class="viewer-panel" id="viewerPanel">
     <div class="viewer-drag"></div>
@@ -77,7 +104,7 @@
   </div>
 </div>
 
-<!-- ── Toast notification ────────────────── -->
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script src="js/tma.js"></script>
